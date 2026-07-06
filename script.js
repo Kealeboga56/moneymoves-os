@@ -35,7 +35,6 @@ async function initApp() {
 
 // --- Real-Time Sync ---
 function setupRealtimeSync() {
-    // Listen for any changes in the tasks table
     db.channel('public:tasks')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'tasks' }, payload => {
           state.tasks.push(payload.new.data);
@@ -61,6 +60,7 @@ function attachEventListeners() {
             document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
             e.currentTarget.classList.add('active');
             renderApp();
+            closeMobileSidebar(); // Close menu on navigation
         });
     });
 
@@ -79,19 +79,30 @@ function attachEventListeners() {
     document.getElementById('filter-priority').addEventListener('change', (e) => { state.filters.priority = e.target.value; renderApp(); });
 
     document.getElementById('new-task-btn').addEventListener('click', () => openTaskModal(null));
-    document.getElementById('export-data-btn').addEventListener('click', exportData); // Kept for backups
+    document.getElementById('export-data-btn').addEventListener('click', exportData);
     document.getElementById('task-modal-overlay').addEventListener('click', closeTaskModal);
+
+    // Mobile Sidebar Logic
+    document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('active');
+    });
+    document.getElementById('sidebar-overlay').addEventListener('click', closeMobileSidebar);
 
     document.getElementById('modal-cancel').addEventListener('click', () => closeCustomModal());
     document.getElementById('modal-confirm').addEventListener('click', async () => {
         if (state.taskToDelete) {
-            // Delete from Supabase
             await db.from('tasks').delete().eq('id', state.taskToDelete);
             state.taskToDelete = null;
             closeCustomModal();
             closeTaskModal();
         }
     });
+}
+
+function closeMobileSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('active');
 }
 
 // --- Filtering Logic ---
@@ -123,7 +134,7 @@ function renderApp() {
     }
 }
 
-// --- Views (Unchanged rendering logic) ---
+// --- Views ---
 function renderDashboard(tasks) {
     const total = tasks.length;
     const inProgress = tasks.filter(t => t.status === 'In Progress').length;
@@ -141,9 +152,9 @@ function renderDashboard(tasks) {
             <div class="dash-card"><div class="dash-label">Total Tasks</div><div class="dash-value">${total}</div></div>
             <div class="dash-card"><div class="dash-label">In Progress</div><div class="dash-value" style="color:var(--accent-blue)">${inProgress}</div></div>
             <div class="dash-card"><div class="dash-label">Blocked</div><div class="dash-value" style="color:var(--danger-red)">${blocked}</div></div>
-            <div class="dash-card"><div class="dash-label">Critical Priority</div><div class="dash-value" style="color:var(--danger-red)">${critical}</div></div>
+            <div class="dash-card"><div class="dash-label">Critical</div><div class="dash-value" style="color:var(--danger-red)">${critical}</div></div>
             <div class="dash-card">
-                <div class="dash-label">Completion Rate</div>
+                <div class="dash-label">Completion</div>
                 <div class="dash-value">${completionRate}%</div>
                 <div class="progress-bar"><div class="progress-fill" style="width: ${completionRate}%"></div></div>
             </div>
@@ -195,6 +206,7 @@ function renderKanban(tasks) {
 
 function renderTable(tasks) {
     document.getElementById('content-area').innerHTML = `
+        <div style="overflow-x: auto;">
         <table class="task-table">
             <thead><tr><th>Title</th><th>Status</th><th>Priority</th><th>Owner</th><th>Project</th><th>Due Date</th><th>Progress</th></tr></thead>
             <tbody>
@@ -211,6 +223,7 @@ function renderTable(tasks) {
                 `).join('')}
             </tbody>
         </table>
+        </div>
     `;
 }
 
@@ -256,15 +269,17 @@ function renderCalendar(tasks) {
     document.getElementById('content-area').innerHTML = `
         <div class="calendar-header">
             <div class="calendar-month-title">${monthName} ${year}</div>
-            <div style="display: flex; gap: 12px;">
-                <button class="calendar-nav-btn" onclick="changeCalendarMonth(-1)">← Prev</button>
+            <div style="display: flex; gap: 8px;">
+                <button class="calendar-nav-btn" onclick="changeCalendarMonth(-1)">←</button>
                 <button class="calendar-nav-btn" onclick="changeCalendarMonth(0)">Today</button>
-                <button class="calendar-nav-btn" onclick="changeCalendarMonth(1)">Next →</button>
+                <button class="calendar-nav-btn" onclick="changeCalendarMonth(1)">→</button>
             </div>
         </div>
-        <div class="calendar-grid">
+        <div style="overflow-x: auto;">
+        <div class="calendar-grid" style="min-width: 700px;">
             ${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => `<div class="calendar-day-header">${d}</div>`).join('')}
             ${daysHtml}
+        </div>
         </div>
     `;
 }
@@ -318,7 +333,7 @@ function renderTimeline(tasks) {
         <div class="timeline-container">
             <div class="timeline-header">
                 <div class="timeline-task-label-header">Task</div>
-                <div class="timeline-days-header">${headerHtml}</div>
+                <div class="timeline-days-header" style="overflow: hidden;">${headerHtml}</div>
             </div>
             <div class="timeline-body">
                 <div class="timeline-task-labels">${validTasks.map(t => `<div class="timeline-task-label" onclick="openTaskModal('${t.id}')">${t.title}</div>`).join('')}</div>
@@ -333,7 +348,7 @@ function renderTimeline(tasks) {
 
 function renderStats(tasks) {
     document.getElementById('content-area').innerHTML = `
-        <div class="dash-grid" style="grid-template-columns: 1fr 1fr; gap: 32px;">
+        <div class="dash-grid" style="grid-template-columns: 1fr; gap: 32px;">
             <div><div class="section-title">Tasks by Status</div><canvas id="chartStatus"></canvas></div>
             <div><div class="section-title">Tasks by Priority</div><canvas id="chartPriority"></canvas></div>
         </div>
@@ -470,12 +485,9 @@ async function saveTask(silent = false) {
     task.definitionOfSuccess.outOfScope = document.getElementById('modal-scope').value.split(',').map(s => s.trim()).filter(Boolean);
     task.lastUpdated = new Date().toISOString();
 
-    // Save to Supabase Database
-    // The table expects a row with 'id' and 'data' (the whole JSON object)
     const { error } = await db.from('tasks').upsert({ id: task.id, data: task });
     if (error) console.error("Cloud Save Error:", error);
 
-    // Update local state immediately for the person who made the change
     if (isNew) {
         state.tasks.push(task);
     } else {
@@ -487,7 +499,7 @@ async function saveTask(silent = false) {
         openTaskModal(task.id); 
     } else {
         closeTaskModal();
-        renderApp(); // Re-render immediately
+        renderApp();
     }
 }
 

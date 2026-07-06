@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Money Moves OS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +13,9 @@
 </head>
 <body>
     <div id="app-container">
+        <!-- Mobile Sidebar Overlay -->
+        <div id="sidebar-overlay"></div>
+
         <!-- Sidebar -->
         <aside id="sidebar">
             <div class="sidebar-header">
@@ -28,7 +31,7 @@
                 <button class="nav-item" data-view="stats">📈 Statistics</button>
             </nav>
             <div class="sidebar-footer">
-                <button id="export-data-btn" class="export-btn">⬇️ Export Data for Team</button>
+                <button id="export-data-btn" class="export-btn">⬇️ Export Data</button>
                 <button id="theme-toggle" class="theme-btn">🌙 Toggle Theme</button>
             </div>
         </aside>
@@ -36,8 +39,11 @@
         <!-- Main Content -->
         <main id="main-content">
             <header id="top-bar">
-                <div class="search-bar">
-                    <input type="text" id="global-search" placeholder="Search tasks, notes, projects...">
+                <div class="top-bar-left">
+                    <button id="mobile-menu-btn" class="hamburger">☰</button>
+                    <div class="search-bar">
+                        <input type="text" id="global-search" placeholder="Search tasks...">
+                    </div>
                 </div>
                 <div class="top-bar-actions">
                     <select id="filter-status" class="filter-select">
@@ -50,7 +56,7 @@
                         <option value="">All Priorities</option>
                         <option>Critical</option><option>High</option><option>Medium</option><option>Low</option>
                     </select>
-                    <button id="new-task-btn">+ New Task</button>
+                    <button id="new-task-btn">+ New</button>
                 </div>
             </header>
 
