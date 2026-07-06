@@ -1,0 +1,117 @@
+{
+  "tasks": [
+    {
+      "id": "task-001",
+      "title": "Design V1 Landing Page",
+      "description": "Create a high-converting, modern landing page for the Money Moves OS launch.",
+      "category": "Design",
+      "project": "Money Moves OS",
+      "owner": "Sarah",
+      "createdBy": "John",
+      "dateCreated": "2023-10-20T10:00:00Z",
+      "dueDate": "2023-10-28T17:00:00Z",
+      "lastUpdated": "2023-10-24T14:30:00Z",
+      "status": "In Progress",
+      "priority": "High",
+      "difficulty": "Medium",
+      "estimatedTime": "3 days",
+      "actualTimeSpent": "1.5 days",
+      "progress": 40,
+      "subtasks": [
+        {"id": "st-1", "title": "Wireframe hero section", "owner": "Sarah", "status": "Completed", "checked": true, "notes": ""},
+        {"id": "st-2", "title": "Select typography and palette", "owner": "Sarah", "status": "Completed", "checked": true, "notes": ""},
+        {"id": "st-3", "title": "Design high-fidelity mockup", "owner": "Sarah", "status": "In Progress", "checked": false, "notes": "Need to iterate on CTA button color."}
+      ],
+      "definitionOfSuccess": {
+        "expectedDeliverable": "Figma file with desktop and mobile responsive landing page designs.",
+        "successMetric": "Stakeholder approval and handoff ready for frontend.",
+        "outOfScope": ["Pricing page design", "Blog section", "User authentication flows"]
+      },
+      "dependencies": {
+        "blockedBy": [],
+        "blocks": ["task-002"]
+      },
+      "notes": [
+        {"id": "n-1", "userId": "Sarah", "timestamp": "2023-10-23T09:00:00Z", "content": "Started wireframes. Focusing on mobile-first approach."}
+      ],
+      "activity": [
+        {"id": "a-1", "timestamp": "2023-10-20T10:00:00Z", "userId": "John", "action": "created the task."},
+        {"id": "a-2", "timestamp": "2023-10-22T11:00:00Z", "userId": "Sarah", "action": "changed status from Backlog to In Progress."}
+      ],
+      "attachments": []
+    },
+    {
+      "id": "task-002",
+      "title": "Develop Landing Page Frontend",
+      "description": "Code the landing page using React/Next.js and Tailwind CSS.",
+      "category": "Development",
+      "project": "Money Moves OS",
+      "owner": "Mike",
+      "createdBy": "John",
+      "dateCreated": "2023-10-21T10:00:00Z",
+      "dueDate": "2023-11-02T17:00:00Z",
+      "lastUpdated": "2023-10-24T10:00:00Z",
+      "status": "Blocked",
+      "priority": "Critical",
+      "difficulty": "Hard",
+      "estimatedTime": "5 days",
+      "actualTimeSpent": "0 hours",
+      "progress": 0,
+      "subtasks": [],
+      "definitionOfSuccess": {
+        "expectedDeliverable": "Deployed staging environment with the landing page.",
+        "successMetric": "Lighthouse score > 90. Loads in under 2 seconds.",
+        "outOfScope": ["Backend integration", "Database setup"]
+      },
+      "dependencies": {
+        "blockedBy": ["task-001"],
+        "blocks": []
+      },
+      "notes": [],
+      "activity": [
+        {"id": "a-1", "timestamp": "2023-10-21T10:00:00Z", "userId": "John", "action": "created the task."}
+      ],
+      "attachments": []
+    },
+    {
+      "id": "task-003",
+      "title": "Conduct 5 Customer Interviews",
+      "description": "Interview potential users to validate the core problem Money Moves OS solves.",
+      "category": "Research",
+      "project": "Market Validation",
+      "owner": "John",
+      "createdBy": "John",
+      "dateCreated": "2023-10-15T10:00:00Z",
+      "dueDate": "2023-10-25T17:00:00Z",
+      "lastUpdated": "2023-10-24T16:00:00Z",
+      "status": "Review",
+      "priority": "Medium",
+      "difficulty": "Easy",
+      "estimatedTime": "2 days",
+      "actualTimeSpent": "2 days",
+      "progress": 100,
+      "subtasks": [
+        {"id": "st-1", "title": "Prepare interview script", "owner": "John", "status": "Completed", "checked": true, "notes": ""},
+        {"id": "st-2", "title": "Schedule interviews", "owner": "John", "status": "Completed", "checked": true, "notes": ""},
+        {"id": "st-3", "title": "Conduct 5 interviews", "owner": "John", "status": "Completed", "checked": true, "notes": ""},
+        {"id": "st-4", "title": "Synthesize findings", "owner": "John", "status": "Completed", "checked": true, "notes": "Documented in Notion."}
+      ],
+      "definitionOfSuccess": {
+        "expectedDeliverable": "Document containing interview notes and key insights.",
+        "successMetric": "5 interviews completed and synthesized.",
+        "outOfScope": ["Building a prototype based on feedback", "Pricing model validation"]
+      },
+      "dependencies": {
+        "blockedBy": [],
+        "blocks": []
+      },
+      "notes": [
+        {"id": "n-1", "userId": "John", "timestamp": "2023-10-24T16:00:00Z", "content": "All interviews done. Users are very excited about the scope-limiting feature."}
+      ],
+      "activity": [
+        {"id": "a-1", "timestamp": "2023-10-24T16:00:00Z", "userId": "John", "action": "changed status to Review."}
+      ],
+      "attachments": []
+    }
+  ]
+}
