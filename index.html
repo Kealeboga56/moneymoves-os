@@ -6,8 +6,9 @@
     <title>Money Moves OS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -27,7 +28,8 @@
                 <button class="nav-item" data-view="stats">📈 Statistics</button>
             </nav>
             <div class="sidebar-footer">
-                <button id="theme-toggle">🌙 Toggle Theme</button>
+                <button id="export-data-btn" class="export-btn">⬇️ Export Data for Team</button>
+                <button id="theme-toggle" class="theme-btn">🌙 Toggle Theme</button>
             </div>
         </aside>
 
@@ -57,11 +59,23 @@
             </div>
         </main>
 
-        <!-- Task Detail Drawer -->
-        <div id="task-drawer-overlay"></div>
-        <aside id="task-drawer">
+        <!-- Task Detail Modal -->
+        <div id="task-modal-overlay"></div>
+        <div id="task-modal-container">
             <!-- Task details rendered dynamically here -->
-        </aside>
+        </div>
+
+        <!-- Custom Verification Modal -->
+        <div id="custom-modal-overlay">
+            <div id="custom-modal">
+                <h3 id="modal-title">Are you sure?</h3>
+                <p id="modal-text">This action cannot be undone.</p>
+                <div class="modal-actions">
+                    <button id="modal-cancel" class="btn-secondary">Cancel</button>
+                    <button id="modal-confirm" class="btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

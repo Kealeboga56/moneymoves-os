@@ -1,0 +1,2 @@
+databasepassword: @Development56.com
+projectname : moneymovesos
